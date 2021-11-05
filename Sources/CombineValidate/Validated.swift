@@ -1,13 +1,8 @@
-//
-//  File.swift
-//  
-//
-//  Created by Alex O on 04.11.2021.
-//
+import Foundation
 
-public enum Validated: Equatable {
+public enum Validated<SuccessPayload> : Equatable {
     case untouched
-    case success
+    case success(SuccessPayload?)
     case failure(reason: String, tableName: String?)
     
     public var isUntouched: Bool {
@@ -18,5 +13,14 @@ public enum Validated: Equatable {
     public var isSuccess: Bool {
         guard case .success = self else { return false }
         return true
+    }
+    
+    public static func == (lhs: Validated<SuccessPayload>, rhs: Validated<SuccessPayload>) -> Bool {
+        switch (lhs, rhs) {
+        case (.untouched, .untouched): return true
+        case (.success, .success): return true
+        case (.failure, .failure): return true
+        default: return false
+        }
     }
 }

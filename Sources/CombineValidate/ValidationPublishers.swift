@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 
-public typealias ValidationPublisher = AnyPublisher<Validated, Never>
+public typealias ValidationPublisher<T> = AnyPublisher<Validated<T>, Never>
 
 extension Publishers {
     public static func RegexValidator(
@@ -9,11 +9,11 @@ extension Publishers {
         regex pattern: RegexPattern,
         errorMessage: String,
         tableName: String? = nil
-    ) -> ValidationPublisher {
+    ) -> ValidationPublisher<Void> {
         publisher
             .dropFirst()
             .map { $0.range(of: pattern, options: .regularExpression) != nil }
-            .map { $0 ? .success : .failure(reason: errorMessage, tableName: tableName) }
+            .map { $0 ? .success(()) : .failure(reason: errorMessage, tableName: tableName) }
             .eraseToAnyPublisher()
     }
     
@@ -21,11 +21,11 @@ extension Publishers {
         for publisher: Published<String>.Publisher,
         errorMessage: String,
         tableName: String? = nil
-    ) -> ValidationPublisher {
+    ) -> ValidationPublisher<Void> {
         publisher
             .dropFirst()
             .map(\.isEmpty)
-            .map { !$0 ? .success : .failure(reason: errorMessage, tableName: tableName) }
+            .map { !$0 ? .success(()) : .failure(reason: errorMessage, tableName: tableName) }
             .eraseToAnyPublisher()
     }
     
@@ -33,10 +33,29 @@ extension Publishers {
         for publisher: Published<Bool>.Publisher,
         errorMessage: String,
         tableName: String? = nil
-    ) -> ValidationPublisher {
+    ) -> ValidationPublisher<Void> {
         publisher
             .dropFirst()
-            .map { $0 ? .success : .failure(reason: errorMessage, tableName: tableName) }
+            .map { $0 ? .success(()) : .failure(reason: errorMessage, tableName: tableName) }
+            .eraseToAnyPublisher()
+    }
+    
+    public static func CreditCardValidator(
+        for publisher: Published<String>.Publisher,
+        cards patterns: [CreditCardPattern],
+        errorMessage: String,
+        tableName: String? = nil
+    ) -> ValidationPublisher<CreditCardPattern> {
+        publisher
+            .dropFirst()
+            .map { number in
+                for card in patterns {
+                    if number.range(of: card.pattern, options: .regularExpression) != nil {
+                        return .success(card)
+                    }
+                }
+                return .failure(reason: errorMessage, tableName: tableName)
+            }
             .eraseToAnyPublisher()
     }
 }

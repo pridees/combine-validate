@@ -2,27 +2,42 @@ import Foundation
 import SwiftUI
 import Combine
 
-public struct ValidationWrapper<ValidatedView: View>: View {
-    @State private var validated: Validated = .untouched
+public struct ValidationWrapper<ValidatedView: View, SuccessPayload>: View {
+    @State private var validated: Validated<SuccessPayload> = .untouched
     
     private var content: ValidatedView
-    private var publisher: ValidationPublisher
+    private var publisher: ValidationPublisher<SuccessPayload>
     private var successImage: Image?
     private var failureImage: Image?
+    private var onValidate: ((Validated<SuccessPayload>) -> Void)?
     
     private let iconTransition: AnyTransition = .asymmetric(
         insertion: .move(edge: .trailing),
         removal: .move(edge: .trailing).combined(with: .opacity)
     ).animation(.easeInOut)
     
-    private let errorMessageTransition: AnyTransition = .opacity
+    private let errorMessageTransition: AnyTransition = .move(edge: .bottom)
     
     public init(
         _ content: ValidatedView,
-        _ publisher: ValidationPublisher,
+        _ publisher: ValidationPublisher<SuccessPayload>,
+        successImage: Image? = nil,
+        failureImage: Image? = nil,
+        _ onValidate: ((Validated<SuccessPayload>) -> Void)?
+    ) {
+        self.content = content
+        self.publisher = publisher
+        self.successImage = successImage
+        self.failureImage = failureImage
+        self.onValidate = onValidate
+    }
+    
+    public init(
+        _ content: ValidatedView,
+        _ publisher: ValidationPublisher<SuccessPayload>,
         successImage: Image? = nil,
         failureImage: Image? = nil
-    ) {
+    ) where SuccessPayload == CreditCardPattern {
         self.content = content
         self.publisher = publisher
         self.successImage = successImage
@@ -34,7 +49,7 @@ public struct ValidationWrapper<ValidatedView: View>: View {
             HStack {
                 content
                     .animation(nil)
-                    .padding(.vertical, 4)
+                    .padding(validated.isSuccess ? .vertical : .top, 4)
                 
                 Spacer()
                 icon
@@ -71,39 +86,11 @@ public struct ValidationWrapper<ValidatedView: View>: View {
         }
     }
     
-    private func handleValidation(_ validationResult: Validated) {
+    private func handleValidation(_ validationResult: Validated<SuccessPayload>) {
         withAnimation {
             self.validated = validationResult
         }
-    }
-}
-
-
-extension TextField {
-    public func validate(
-        for publisher: ValidationPublisher,
-        successImage: Image? = Image(systemName: "checkmark.circle"),
-        failureImage: Image? = Image(systemName: "xmark.circle")
-    ) -> some View {
-        ValidationWrapper(self, publisher, successImage: successImage, failureImage: failureImage)
-    }
-}
-
-extension SecureField {
-    public func validate(
-        for publisher: ValidationPublisher,
-        successImage: Image? = Image(systemName: "checkmark.circle"),
-        failureImage: Image? = Image(systemName: "xmark.circle")
-    ) -> some View {
-        ValidationWrapper(self, publisher, successImage: successImage, failureImage: failureImage)
-    }
-}
-
-extension Toggle {
-    public func validate(
-        for publisher: ValidationPublisher
-    ) -> some View {
-        ValidationWrapper(self, publisher, successImage: nil, failureImage: nil)
+        onValidate?(validationResult)
     }
 }
 
@@ -162,7 +149,11 @@ struct Form: View {
                     .validate(for: viewModel.iAgreeValidator)
             }
         }
+        #if os(iOS)
         .listStyle(.insetGrouped)
+        #else
+        .listStyle(.inset)
+        #endif
     }
 }
 

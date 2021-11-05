@@ -12,7 +12,7 @@ extension Published.Publisher where Value == String {
     public func validateNonEmpty(
         errorMessage: String,
         tableName: String? = nil
-    ) -> ValidationPublisher {
+    ) -> ValidationPublisher<Void> {
         Publishers.NotEmptyValidator(for: self, errorMessage: errorMessage, tableName: tableName)
     }
     
@@ -20,7 +20,7 @@ extension Published.Publisher where Value == String {
         regex pattern: RegexPattern,
         errorMessage: String,
         tableName: String? = nil
-    ) -> ValidationPublisher {
+    ) -> ValidationPublisher<Void> {
         Publishers.RegexValidator(for: self, regex: pattern, errorMessage: errorMessage, tableName: tableName)
     }
 }
@@ -29,7 +29,7 @@ extension Published.Publisher where Value == Bool {
     public func validateToggle(
         errorMessage: String,
         tableName: String? = nil
-    ) -> ValidationPublisher {
+    ) -> ValidationPublisher<Void> {
         Publishers.ToggleValidator(for: self, errorMessage: errorMessage, tableName: tableName)
     }
 }
