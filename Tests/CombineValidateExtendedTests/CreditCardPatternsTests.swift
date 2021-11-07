@@ -1,5 +1,5 @@
 import XCTest
-@testable import CombineValidate
+@testable import CombineValidateExtended
 
 class CreditCardPatternTests: XCTestCase {
     func testAmericanExpressPattern() {

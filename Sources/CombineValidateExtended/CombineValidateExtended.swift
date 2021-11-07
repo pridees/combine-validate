@@ -1,7 +1,7 @@
 import Combine
 import CombineValidate
 
-/// Credit card pattens uses with ``CreditCardValidator``
+/// Credit card validtaion pattens are conforming to ``CombineValidateRegexPattern`` & ``CombineValidate.RegexProtocol``
 public enum CreditCardPattern: RegexPattern, RegexProtocol {
     /// American Express payment system
     case Amex = #"^(34|37)\d{13}$"#
@@ -41,5 +41,30 @@ public enum CreditCardPattern: RegexPattern, RegexProtocol {
     /// Allows inserting expiry date as MM/YYYY or MM-YYYY format
     case cardExpireDate = #"^(0[1-9]|1[0-2])(\/|-)([0-9]{4})$"#
 
+    public var pattern: RegexPattern { self.rawValue }
+}
+
+
+public enum NumberPattern: RegexPattern, RegexProtocol {
+    case anyNumber = #"^(-)?[0-9]{1,18}$"#
+    
+    case positiveNumber = #"^\d+$"#
+    
+    case negativeNumber = #"^-\d*\.?\d+$"#
+    
+    case anyFloat = #"^(-)?[0-9]*.[0-9]*[1-9]+$"#
+    
+    public var pattern: RegexPattern { self.rawValue }
+}
+
+
+public enum URLPatterns: RegexPattern, RegexProtocol {
+    /// Basic url validation
+    case url = #"^((https?|ftp|file):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$"#
+    
+    /// Youtube link looks like
+    /// `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
+    case youtubeURL = #"/(?:https?://)?(?:(?:(?:www\.?)?youtube\.com(?:/(?:(?:watch\?.*?(v=[^&\s]+).*)|(?:v(/.*))|(channel/.+)|(?:user/(.+))|(?:results\?(search_query=.+))))?)|(?:youtu\.be(/.*)?))/g"#
+    
     public var pattern: RegexPattern { self.rawValue }
 }

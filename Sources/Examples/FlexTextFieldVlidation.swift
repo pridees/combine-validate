@@ -33,11 +33,8 @@ class AddSocialProfileViewModel: ObservableObject {
             .assign(to: \.validatedResult, on: self)
             .store(in: &subscription)
     }
-    
-    public func reset() {
-
-    }
 }
+
 @available(iOS 15, *)
 struct SoclialLinkForm: View {
     enum FocusField: Hashable {
@@ -59,6 +56,7 @@ struct SoclialLinkForm: View {
                     .validate(for: viewModel.socialProfileValidator)
                     .focused($focusField, equals: .socialProfile)
                     .disableAutocorrection(true)
+                    .autocapitalization(.none)
             }
         }
         .navigationBarTitle(Text(socialIcon))
