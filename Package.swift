@@ -15,9 +15,14 @@ let package = Package(
             name: "Examples",
             targets: ["Examples"]
         ),
+        .library(
+            name: "CombineValidateExtended",
+            targets: ["CombineValidateExtended"]
+        ),
     ],
     dependencies: [],
     targets: [
+        // MARK: - CombineValidate
         .target(
             name: "CombineValidate",
             dependencies: []
@@ -26,6 +31,18 @@ let package = Package(
             name: "CombineValidateTests",
             dependencies: ["CombineValidate"]
         ),
+        
+        // MARK: - CombineValidateExtended
+        .target(
+            name: "CombineValidateExtended",
+            dependencies: ["CombineValidate"]
+        ),
+        .testTarget(
+            name: "CombineValidateExtendedTests",
+            dependencies: ["CombineValidateExtended", "CombineValidate"]
+        ),
+        
+        // MARK: - Examples target
         .target(
             name: "Examples",
             dependencies: [
