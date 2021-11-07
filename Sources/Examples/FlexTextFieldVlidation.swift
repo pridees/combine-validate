@@ -35,15 +35,8 @@ class AddSocialProfileViewModel: ObservableObject {
     }
 }
 
-@available(iOS 15, *)
 struct SoclialLinkForm: View {
-    enum FocusField: Hashable {
-        case socialProfile
-    }
-    
     @StateObject var viewModel = AddSocialProfileViewModel()
-    
-    @FocusState var focusField: FocusField?
     
     init() {}
     
@@ -54,7 +47,6 @@ struct SoclialLinkForm: View {
             ) {
                 TextField("Should be profile", text: $viewModel.socialProfileUrl)
                     .validate(for: viewModel.socialProfileValidator)
-                    .focused($focusField, equals: .socialProfile)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
             }
@@ -78,7 +70,6 @@ struct SoclialLinkForm: View {
     
 }
 
-@available(iOS 15, *)
 struct SoclialLinkForm_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
