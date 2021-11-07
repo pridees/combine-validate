@@ -1,15 +1,18 @@
-name: Code Coverage
+name: Test And Code Coverage
 
-on: pull_request
+on:
+  push
+    branches:
+      - main
 
 jobs:
-  codecov:
+  test:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
     - name: Check Swift version
       run: swift --version
-    - name: Gather code coverage
+    - name: Test and Gather code coverage
       run: swift test --enable-code-coverage
     - name: Generate report
       run: |
