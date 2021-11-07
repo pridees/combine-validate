@@ -1,4 +1,4 @@
-name: Test And Code Coverage
+name: Tests And Coverage
 
 on:
   push:
@@ -19,13 +19,12 @@ jobs:
       run: swift test --enable-code-coverage
     - name: Generate report
       run: |
-        xcrun llvm-cov report \
-          .build/x86_64-apple-macosx/debug/CombineValidatePackageTests.xctest/Contents/MacOS/CombineValidatePackageTests \
+        xcrun llvm-cov show \
+          .build/debug/CombineValidatePackageTests.xctest/Contents/MacOS/CombineValidatePackageTests \
           -instr-profile=".build/debug/codecov/default.profdata" \
-          -ignore-filename-regex="(.build)" > coverage.txt
+          -ignore-filename-regex=".build|Tests" > coverage.txt
     - name: Upload report
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
-        bash <(curl -s https://codecov.io/bash) \
-          -J "CombineValidate"
+        bash <(curl -s https://codecov.io/bash)
