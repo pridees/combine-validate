@@ -1,0 +1,25 @@
+name: Code Coverage
+
+on: pull_request
+
+jobs:
+  codecov:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Check Swift version
+      run: swift --version
+    - name: Gather code coverage
+      run: swift test --enable-code-coverage
+    - name: Generate report
+      run: |
+        xcrun llvm-cov report \
+          .build/x86_64-apple-macosx/debug/CombineValidatePackageTests.xctest/Contents/MacOS/CombineValidatePackageTests \
+          -instr-profile=".build/debug/codecov/default.profdata" \
+          -ignore-filename-regex="(.build)" > coverage.txt
+    - name: Upload report
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        bash <(curl -s https://codecov.io/bash) \
+          -J "CombineValidate"

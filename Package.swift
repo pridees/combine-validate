@@ -12,13 +12,13 @@ let package = Package(
             targets: ["CombineValidate"]
         ),
         .library(
-            name: "Examples",
-            targets: ["Examples"]
-        ),
-        .library(
             name: "CombineValidateExtended",
             targets: ["CombineValidateExtended"]
         ),
+//        .library(
+//            name: "Examples",
+//            targets: ["Examples"]
+//        ),
     ],
     dependencies: [],
     targets: [
@@ -39,15 +39,15 @@ let package = Package(
         ),
         .testTarget(
             name: "CombineValidateExtendedTests",
-            dependencies: ["CombineValidateExtended", "CombineValidate"]
+            dependencies: ["CombineValidateExtended"]
         ),
         
-        // MARK: - Examples target
-        .target(
-            name: "Examples",
-            dependencies: [
-                .byNameItem(name: "CombineValidate", condition: .none)
-            ]
-        ),
+//        // MARK: - Examples target
+//        .target(
+//            name: "Examples",
+//            dependencies: [
+//                .byNameItem(name: "CombineValidate", condition: .none)
+//            ]
+//        ),
     ]
 )

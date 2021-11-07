@@ -2,6 +2,7 @@
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Swift versions](https://img.shields.io/badge/Swift%20versions-5.3%20%7C%205.4%20%7C%205.5-red.svg)
 ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS-red.svg)
+[![codecov](https://codecov.io/gh/pridees/combine-validate/branch/main/graph/badge.svg?token=VUX36CJOXE)](https://codecov.io/gh/pridees/combine-validate)
 
 * [What is CombineValidate?](#what-is-combine-validate)
 * [Examples](#examples)
