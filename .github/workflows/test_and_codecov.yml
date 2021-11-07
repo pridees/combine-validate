@@ -4,15 +4,18 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - '*'
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: macos-11.0
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Check Swift version
       run: swift --version
-    - name: Test and Gather code coverage
+    - name: Test and gather code coverage
       run: swift test --enable-code-coverage
     - name: Generate report
       run: |
