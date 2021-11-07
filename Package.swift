@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.4
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -11,6 +11,10 @@ let package = Package(
             name: "CombineValidate",
             targets: ["CombineValidate"]
         ),
+        .library(
+            name: "Examples",
+            targets: ["Examples"]
+        ),
     ],
     dependencies: [],
     targets: [
@@ -21,6 +25,12 @@ let package = Package(
         .testTarget(
             name: "CombineValidateTests",
             dependencies: ["CombineValidate"]
+        ),
+        .target(
+            name: "Examples",
+            dependencies: [
+                .byNameItem(name: "CombineValidate", condition: .none)
+            ]
         ),
     ]
 )
