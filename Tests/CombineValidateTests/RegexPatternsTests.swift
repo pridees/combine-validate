@@ -38,6 +38,4 @@ final class RegexPatternsTests: XCTestCase {
             "Strong password. Negative case. Failed"
         )
     }
-    
-
 }
