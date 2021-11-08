@@ -33,7 +33,31 @@ Useful satellite for validation user inputs proposes for any SwiftUI architectur
 
 
 ## Basic usage
+Firstly you should define the validation publisher within your `@Published` property
 
+```swift
+class FormViewModel: ObservableObject {
+    
+    @Published var email = ""
+    public lazy var emailValidator: ValidationPublisher = {
+        $email.validateWithRegex(
+            regex: RegularPattern.email,
+            error: "Not email",
+            tableName: nil
+        )
+    }()
+}
+```
+Excellent! And then, call the validate view modifier from your SwiftUI Input
+
+```swift
+TextField("Should email", text: $viewModel.email)
+        .validate(for: viewModel.emailValidator)
+```
+
+Enjoy!
+
+Same steps you can apply to `SecureField` and `Toggle`.
 
 ## CombineValidateExtended library
 Useful set of validation publishers and regular expressions library.
