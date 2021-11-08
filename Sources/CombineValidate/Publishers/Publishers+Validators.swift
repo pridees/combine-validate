@@ -64,7 +64,10 @@ public func MultiRegexValidator<Pattern>(
             }
             return validationResults
         }
-        .map { $0.allSatisfy { $0.isSuccess } ? .success(.none) : $0.first! }
+        .map { $0.allSatisfy { $0.isSuccess }
+            ? .success(.none)
+            : $0.first { $0 != .untouched && $0 != .success(.none) }!
+        }
         .eraseToAnyPublisher()
 }
 

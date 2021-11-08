@@ -22,7 +22,9 @@ public enum Validated<Payload> : Equatable {
         switch (lhs, rhs) {
         case (.untouched, .untouched): return true
         case (.success, .success): return true
-        case (.failure, .failure): return true
+        case (.failure(let reasonLhs, let tableNameLhs), .failure(let reasonRhs, let tableNameRhs)):
+            guard reasonLhs == reasonRhs && tableNameLhs == tableNameRhs else { return false }
+            return true
         default: return false
         }
     }
