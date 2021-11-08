@@ -7,10 +7,6 @@ final class OneOfRegexValidatorTests: XCTestCase {
         case facebook = #"(?:https?:\/\/)?(?:www\.)?facebook\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*?(\/)?([\w\-\.]{5,})"#
         case linkedIn = #"^(http(s)?:\/\/)?([\w]+\.)?linkedin\.com\/(pub|in|profile)"#
         case instagram = #"(?:(?:http|https):\/\/)?(?:www.)?(?:instagram.com|instagr.am|instagr.com)\/(\w+)"#
-        
-        var pattern: RegexPattern {
-            self.rawValue
-        }
     }
 
     class ViewModel: ObservableObject {
