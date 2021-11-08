@@ -40,8 +40,6 @@ public enum CreditCardPattern: RegexPattern, RegexProtocol {
     
     /// Allows inserting expiry date as MM/YYYY or MM-YYYY format
     case cardExpireDate = #"^(0[1-9]|1[0-2])(\/|-)([0-9]{4})$"#
-
-    public var pattern: RegexPattern { self.rawValue }
 }
 
 
@@ -65,6 +63,4 @@ public enum URLPatterns: RegexPattern, RegexProtocol {
     /// Youtube link looks like
     /// `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
     case youtubeURL = #"/(?:https?://)?(?:(?:(?:www\.?)?youtube\.com(?:/(?:(?:watch\?.*?(v=[^&\s]+).*)|(?:v(/.*))|(channel/.+)|(?:user/(.+))|(?:results\?(search_query=.+))))?)|(?:youtu\.be(/.*)?))/g"#
-    
-    public var pattern: RegexPattern { self.rawValue }
 }
