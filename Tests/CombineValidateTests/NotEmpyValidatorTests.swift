@@ -1,6 +1,5 @@
 import XCTest
 import Combine
-import CombineSchedulers
 @testable import CombineValidate
 
 final class NotEmptyValidatorTests: XCTestCase {

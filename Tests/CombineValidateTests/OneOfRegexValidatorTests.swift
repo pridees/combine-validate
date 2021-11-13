@@ -1,7 +1,6 @@
-import Combine
-import CombineSchedulers
-@testable import CombineValidate
 import XCTest
+import Combine
+@testable import CombineValidate
 
 final class OneOfRegexValidatorTests: XCTestCase {
     enum SocialLinkPattern: RegexPattern, RegexProtocol {

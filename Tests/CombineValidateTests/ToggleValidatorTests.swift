@@ -1,6 +1,6 @@
+import XCTest
 import Combine
 @testable import CombineValidate
-import XCTest
 
 final class ToggleValidatorTests: XCTestCase {
     class ViewModel: ObservableObject {
