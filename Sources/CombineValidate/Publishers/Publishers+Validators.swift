@@ -1,3 +1,4 @@
+import Foundation
 import Combine
 
 public func NotEmptyValidator(
@@ -7,6 +8,7 @@ public func NotEmptyValidator(
 ) -> ValidationPublisher {
     publisher
         .dropFirst()
+        .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
         .map(\.isEmpty)
         .map { !$0 ? .success(.none) : .failure(reason: message, tableName: tableName) }
         .eraseToAnyPublisher()
@@ -20,7 +22,8 @@ public func RegexValidator<Pattern>(
 ) -> ValidationPublisher where Pattern: RegexProtocol {
     publisher
         .dropFirst()
-        .map { $0.range(of: pattern.pattern, options: .regularExpression) != nil }
+        .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+        .map { pattern.test($0) }
         .map { $0 ? .success(.none) : .failure(reason: message, tableName: tableName) }
         .eraseToAnyPublisher()
 }
@@ -33,9 +36,10 @@ public func OneOfRegexValidator<Pattern>(
 ) -> RichValidationPublisher<Pattern> where Pattern: RegexProtocol {
     publisher
         .dropFirst()
+        .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
         .map { value in
             for pattern in patterns {
-                if value.range(of: pattern.pattern, options: .regularExpression) != nil {
+                if  pattern.test(value) {
                     return .success(pattern)
                 }
             }
@@ -52,11 +56,12 @@ public func MultiRegexValidator<Pattern>(
 ) -> ValidationPublisher where Pattern: RegexProtocol {
     publisher
         .dropFirst()
+        .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
         .map { (value: String) -> [Validated<Void>] in
             var validationResults: [Validated<Void>] = .init(repeating: .untouched, count: patterns.count)
             
             for (index, pattern) in patterns.enumerated() {
-                if value.range(of: pattern.pattern, options: .regularExpression) != nil {
+                if pattern.test(value) {
                     validationResults[index] = .success(.none)
                 } else {
                     validationResults[index] = .failure(reason: messages[index], tableName: tableName)

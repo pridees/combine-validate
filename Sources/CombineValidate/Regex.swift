@@ -5,11 +5,18 @@ public typealias RegexPattern = String
 
 /// Describes enum instances when RawValues is ``RegexPattern``
 public protocol RegexProtocol where Self: RawRepresentable, Self.RawValue == RegexPattern {
+    
     var pattern: RegexPattern { get }
+    
+    func test<T: StringProtocol>(_ string: T) -> Bool
 }
 
 public extension RegexProtocol {
     var pattern: RegexPattern { self.rawValue }
+    
+    func test<T: StringProtocol>(_ string: T) -> Bool {
+        string.range(of: self.pattern, options: .regularExpression) != nil
+    }
 }
 
 /// Extensions with predefined popular regular expressions
@@ -25,9 +32,9 @@ public enum RegularPattern: RegexPattern, RegexProtocol {
     /// - 1 special symbol
     /// - 1 Uppercase
     /// - 1 number
-    case strongPassword = #"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"#
+    case strongPassword = #"^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$"#
     
-    case notEmpty = #"[\S\s]+[\S]+"#
+    case notEmpty = #"([[:graph:]])+"#
     
     case mustIncludeCapitalLetters = #"(?=.*[A-Z])"#
     
@@ -38,6 +45,4 @@ public enum RegularPattern: RegexPattern, RegexProtocol {
     case mustIncludeSmallLetters = #"(?=.*[a-z])"#
     
     case wordAndDigitsOnly = #"^(\d|\w|\S){1,}$"#
-    
-    case anyInOneLine = #"^.+$"#
 }
