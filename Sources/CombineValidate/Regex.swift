@@ -32,6 +32,10 @@ public extension RegexProtocol {
     }
 }
 
+public extension RegexProtocol {
+    var pattern: RegexPattern { self.rawValue }
+}
+
 /// Extensions with predefined popular regular expressions
 ///
 /// Conforming to ``RegexPattern`` & ``RegexProtocol``

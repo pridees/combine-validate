@@ -1,6 +1,5 @@
 import XCTest
 import Combine
-import CombineSchedulers
 @testable import CombineValidate
 
 class MultiRegexValidatorTests: XCTestCase {

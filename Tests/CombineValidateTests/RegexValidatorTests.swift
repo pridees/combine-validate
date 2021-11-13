@@ -1,6 +1,5 @@
 import XCTest
 import Combine
-import CombineSchedulers
 @testable import CombineValidate
 
 class RegexValidatorTests: XCTestCase {
@@ -28,7 +27,6 @@ class RegexValidatorTests: XCTestCase {
     let viewModel = ViewModel()
     
     func testIgnoreFirstValue() {
-        
         XCTAssertEqual(viewModel.validationResult, .untouched)
     }
     
