@@ -1,6 +1,7 @@
-import Combine
-@testable import CombineValidate
 import XCTest
+import Combine
+import CombineSchedulers
+@testable import CombineValidate
 
 final class NotEmptyValidatorTests: XCTestCase {
     class ViewModel: ObservableObject {
@@ -11,7 +12,7 @@ final class NotEmptyValidatorTests: XCTestCase {
         public var subscription: AnyCancellable? = nil
         
         public lazy var nameNotEmptyValidator: ValidationPublisher = {
-            $name.validateNonEmpty(error: "Should not empty", tableName: nil)
+            $name.validateNonEmpty(error: "Should not empty")
         }()
         
         init() {
@@ -28,11 +29,17 @@ final class NotEmptyValidatorTests: XCTestCase {
     
     func testInputEmptyValue() {
         viewModel.name = ""
+        
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.5)
+        
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Should not empty", tableName: nil))
     }
     
     func testInputNonEmptyValue() {
         viewModel.name = "alex"
+        
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.5)
+
         XCTAssertEqual(viewModel.validationResult, .success(.none))
     }
 }

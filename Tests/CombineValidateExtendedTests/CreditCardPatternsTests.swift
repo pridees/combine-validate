@@ -4,16 +4,14 @@ import XCTest
 class CreditCardPatternTests: XCTestCase {
     func testAmericanExpressPattern() {
         let americanExpressCard = cleanCardNumber("3700 0000 0000 002")
-        
-        XCTAssertNotNil(
-            americanExpressCard.range(of: CreditCardPattern.Amex.pattern, options: .regularExpression),
+        XCTAssertTrue(
+            CreditCardPattern.Amex.test(americanExpressCard),
             "AmericanExpress: \(americanExpressCard). Positive case failed"
         )
         
         let unExistedNumber = cleanCardNumber("0000 0000 0000 000")
-        
-        XCTAssertNil(
-            unExistedNumber.range(of: CreditCardPattern.Amex.pattern, options: .regularExpression),
+        XCTAssertFalse(
+            CreditCardPattern.Amex.test(unExistedNumber),
             "AmericanExpress: \(unExistedNumber). Negative case failed"
         )
     }
@@ -23,16 +21,16 @@ class CreditCardPatternTests: XCTestCase {
         
         for IIR in mastercardIIRRange {
             let cardNumber =  cleanCardNumber("\(IIR)00 0000 0000 4321")
-            XCTAssertNotNil(
-                cardNumber.range(of: CreditCardPattern.Mastercard.pattern, options: .regularExpression),
+            XCTAssertTrue(
+                CreditCardPattern.Mastercard.test(cardNumber),
                 "Mastercard: \(cardNumber). Positive case failed"
             )
         }
         
         let unExistedNumber = cleanCardNumber("5600 0000 0000 0000")
         
-        XCTAssertNil(
-            unExistedNumber.range(of: CreditCardPattern.Mastercard.pattern, options: .regularExpression),
+        XCTAssertFalse(
+            CreditCardPattern.Mastercard.test(unExistedNumber),
             "Mastercard: \(unExistedNumber). Negative case failed"
         )
     }
@@ -40,15 +38,15 @@ class CreditCardPatternTests: XCTestCase {
     func testVisaPattern() {
         let visaCardNumber = cleanCardNumber("4377 0000 0000 0000")
         
-        XCTAssertNotNil(
-            visaCardNumber.range(of: CreditCardPattern.Visa.pattern, options: .regularExpression),
+        XCTAssertTrue(
+            CreditCardPattern.Visa.test(visaCardNumber),
             "Mastercard: \(visaCardNumber). Positive case failed"
         )
         
         let unExistedNumber = cleanCardNumber("0000 0000 0000 0000")
         
-        XCTAssertNil(
-            unExistedNumber.range(of: CreditCardPattern.Visa.pattern, options: .regularExpression),
+        XCTAssertFalse(
+            CreditCardPattern.Visa.test(unExistedNumber),
             "Mastercard: \(unExistedNumber). Negative case failed"
         )
     }
@@ -58,38 +56,36 @@ class CreditCardPatternTests: XCTestCase {
         
         for IIR in maestroIIRRange {
             let cardNumber =  cleanCardNumber("\(IIR) 0000 0000 4321")
-            XCTAssertNotNil(
-                cardNumber.range(of: CreditCardPattern.Maestro.pattern, options: .regularExpression),
+            XCTAssertTrue(
+                CreditCardPattern.Maestro.test(cardNumber),
                 "Maestro: \(cardNumber). Positive case failed"
             )
         }
         
         let unExistedNumber = cleanCardNumber("0000 0000 0000 0000")
         
-        XCTAssertNil(
-            unExistedNumber.range(of: CreditCardPattern.Maestro.pattern, options: .regularExpression),
+        XCTAssertFalse(
+            CreditCardPattern.Maestro.test(unExistedNumber),
             "Mastercard: \(unExistedNumber). Negative case failed"
         )
     }
     
     func testDiscoverPattern() {
         let discoverUS = cleanCardNumber("6011 0000 0000 0000")
-        let discoverGB = cleanCardNumber("6445 0000 0000 0000")
-        
-        XCTAssertNotNil(
-            discoverUS.range(of: CreditCardPattern.Discover.pattern, options: .regularExpression),
+        XCTAssertTrue(
+            CreditCardPattern.Discover.test(discoverUS),
             "Discover US: \(discoverUS). Positive case failed"
         )
         
-        XCTAssertNotNil(
-            discoverGB.range(of: CreditCardPattern.Discover.pattern, options: .regularExpression),
+        let discoverGB = cleanCardNumber("6445 0000 0000 0000")
+        XCTAssertTrue(
+            CreditCardPattern.Discover.test(discoverGB),
             "Discover GB: \(discoverGB). Positive case failed"
         )
         
         let unExistedNumber = cleanCardNumber("0000 0000 0000 0000")
-        
-        XCTAssertNil(
-            unExistedNumber.range(of: CreditCardPattern.Discover.pattern, options: .regularExpression),
+        XCTAssertFalse(
+            CreditCardPattern.Discover.test(unExistedNumber),
             "Discover: \(unExistedNumber). Negative case failed"
         )
     }
@@ -98,51 +94,49 @@ class CreditCardPatternTests: XCTestCase {
         let jsbUsCard = cleanCardNumber("3569 9900 1009 5841")
         let jsbNativeIRRs = ["2131", "1800"]
         
-        XCTAssertNotNil(
-            jsbUsCard.range(of: CreditCardPattern.JSB.pattern, options: .regularExpression),
+        XCTAssertTrue(
+            CreditCardPattern.JSB.test(jsbUsCard),
             "JSB GB: \(jsbUsCard). Positive case failed"
         )
         
         for IIR in jsbNativeIRRs {
             let cardNumber =  cleanCardNumber("\(IIR) 0000 0000 000")
-            XCTAssertNotNil(
-                cardNumber.range(of: CreditCardPattern.JSB.pattern, options: .regularExpression),
+            XCTAssertTrue(
+                CreditCardPattern.JSB.test(cardNumber),
                 "JSB GB: \(cardNumber). Positive case failed"
             )
         }
         
         let unExistedNumber = cleanCardNumber("0000 0000 0000 0000")
-        
-        XCTAssertNil(
-            unExistedNumber.range(of: CreditCardPattern.JSB.pattern, options: .regularExpression),
+        XCTAssertFalse(
+            CreditCardPattern.JSB.test(unExistedNumber),
             "JSB: \(unExistedNumber). Negative case failed"
         )
     }
     
     func testUnionPayPattern() {
         let unionPay = cleanCardNumber("6200 0000 0000 0000")
-        let unionPayAlt1 = cleanCardNumber("8171 0000 0000 0000")
-        let unionPayAlt2 = cleanCardNumber("8171 0000 0000 0000 000")
         
-        XCTAssertNotNil(
-            unionPay.range(of: CreditCardPattern.UnionPay.pattern, options: .regularExpression),
+        XCTAssertTrue(
+            CreditCardPattern.UnionPay.test(unionPay),
             "UnionPay: \(unionPay). Positive case failed"
         )
         
-        XCTAssertNotNil(
-            unionPayAlt1.range(of: CreditCardPattern.UnionPay.pattern, options: .regularExpression),
+        let unionPayAlt1 = cleanCardNumber("8171 0000 0000 0000")
+        XCTAssertTrue(
+            CreditCardPattern.UnionPay.test(unionPayAlt1),
             "UnionPay: \(unionPayAlt1). Positive case failed"
         )
         
-        XCTAssertNotNil(
-            unionPayAlt2.range(of: CreditCardPattern.UnionPay.pattern, options: .regularExpression),
+        let unionPayAlt2 = cleanCardNumber("8171 0000 0000 0000 000")
+        XCTAssertTrue(
+            CreditCardPattern.UnionPay.test(unionPayAlt2),
             "UnionPay: \(unionPayAlt2). Positive case failed"
         )
         
         let unExistedNumber = cleanCardNumber("0000 0000 0000 0000")
-        
-        XCTAssertNil(
-            unExistedNumber.range(of: CreditCardPattern.UnionPay.pattern, options: .regularExpression),
+        XCTAssertFalse(
+            CreditCardPattern.UnionPay.test(unExistedNumber),
             "UnionPay: \(unExistedNumber). Negative case failed"
         )
     }
@@ -152,16 +146,16 @@ class CreditCardPatternTests: XCTestCase {
         
         for IIR in mirIRRs {
             let cardNumber =  cleanCardNumber("\(IIR) 0000 0000 0000")
-            XCTAssertNotNil(
-                cardNumber.range(of: CreditCardPattern.Mir.pattern, options: .regularExpression),
+            XCTAssertTrue(
+                CreditCardPattern.Mir.test(cardNumber),
                 "Mir: \(cardNumber). Positive case failed"
             )
         }
         
         let unExistedNumber = cleanCardNumber("0000 0000 0000 0000")
         
-        XCTAssertNil(
-            unExistedNumber.range(of: CreditCardPattern.Mir.pattern, options: .regularExpression),
+        XCTAssertFalse(
+            CreditCardPattern.Mir.test(unExistedNumber),
             "Mir: \(unExistedNumber). Negative case failed"
         )
     }

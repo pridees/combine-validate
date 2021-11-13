@@ -2,11 +2,15 @@ import XCTest
 @testable import CombineValidateExtended
 
 final class RegexPatternsTests: XCTestCase {
-    func testUrlPattern() throws {
+    func testUrlPattern() {
         let url = "https://google.com"
-        let nonUrl = "Some string"
+        XCTAssertTrue(URLPatterns.url.test(url), "Simple URL. Positive case failed")
         
-        XCTAssertNotNil(url.range(of: URLPatterns.url.pattern, options: .regularExpression), "Simple URL. Positive case failed")
-        XCTAssertNil(nonUrl.range(of: URLPatterns.url.pattern, options: .regularExpression), "Simple URL. Negative case failed")
+        let nonUrl = "Some string"
+        XCTAssertFalse(URLPatterns.url.test(nonUrl), "Simple URL. Negative case failed")
+    }
+    
+    func testYoutubeUrlPattern() {
+        let youtubeURL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     }
 }

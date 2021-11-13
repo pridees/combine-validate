@@ -42,8 +42,9 @@ public enum CreditCardPattern: RegexPattern, RegexProtocol {
     case cardExpireDate = #"^(0[1-9]|1[0-2])(\/|-)([0-9]{4})$"#
 }
 
-
+/// Extended number validation patterns
 public enum NumberPattern: RegexPattern, RegexProtocol {
+    /// any numer
     case anyNumber = #"^(-)?[0-9]{1,18}$"#
     
     case positiveNumber = #"^\d+$"#
