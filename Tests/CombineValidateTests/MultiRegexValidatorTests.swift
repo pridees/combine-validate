@@ -5,21 +5,20 @@ import Combine
 class MultiRegexValidatorTests: XCTestCase {
     class ViewModel: ObservableObject {
         
-        @Published var email = ""
+        @Published var specialText = ""
         @Published var validationResult: Validated<Void> = .untouched
         
-        public lazy var emailValidator: ValidationPublisher = {
-            $email.validateWithMultiRegex(
+        public lazy var specialTextValidator: ValidationPublisher = {
+            $specialText.validateWithMultiRegex(
                 regexs: [RegularPattern.mustIncludeNumbers, RegularPattern.mustIncludeSpecialSymbols, RegularPattern.mustIncludeCapitalLetters],
-                errors: ["Should be one number at least", "Should be one special symbol at least", "Should be one capital letter at least"],
-                tableName: nil
+                errors: ["Should be one number at least", "Should be one special symbol at least", "Should be one capital letter at least"]
             )
         }()
         
         private var subscription = Set<AnyCancellable>()
         
         init() {
-            emailValidator
+            specialTextValidator
                 .assign(to: \.validationResult, on: self)
                 .store(in: &subscription)
         }
@@ -32,7 +31,9 @@ class MultiRegexValidatorTests: XCTestCase {
     }
     
     func testFullyInvalidValue() {
-        viewModel.email = ""
+        viewModel.specialText = ""
+        
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
         
         XCTAssertEqual(
             viewModel.validationResult,
@@ -41,13 +42,17 @@ class MultiRegexValidatorTests: XCTestCase {
     }
     
     func testValueWithOneNumber() {
-        viewModel.email = "1"
+        viewModel.specialText = "1"
+        
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Should be one special symbol at least", tableName: nil))
     }
     
     func testValueWithOneNumberAndSpecialSymbol() {
-        viewModel.email = "1%"
+        viewModel.specialText = "1%"
+        
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
         
         XCTAssertEqual(
             viewModel.validationResult,
@@ -56,7 +61,9 @@ class MultiRegexValidatorTests: XCTestCase {
     }
     
     func testValueWithOneNumberAndSpecialSymbolAndCapitalLetter() {
-        viewModel.email = "1%A"
+        viewModel.specialText = "1%A"
+        
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
         
         XCTAssertEqual(viewModel.validationResult, .success(.none))
     }
