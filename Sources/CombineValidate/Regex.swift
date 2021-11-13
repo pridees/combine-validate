@@ -31,11 +31,6 @@ public extension RegexProtocol {
         string.range(of: self.pattern, options: .regularExpression) != nil
     }
 }
-
-public extension RegexProtocol {
-    var pattern: RegexPattern { self.rawValue }
-}
-
 /// Extensions with predefined popular regular expressions
 ///
 /// Conforming to ``RegexPattern`` & ``RegexProtocol``
