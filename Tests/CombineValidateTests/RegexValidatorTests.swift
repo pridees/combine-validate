@@ -33,7 +33,7 @@ class RegexValidatorTests: XCTestCase {
     func testValidEmailValue() {
         viewModel.email = "someemail@gmail.com"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.5)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
 
         XCTAssertEqual(viewModel.validationResult, .success(.none))
     }
@@ -41,7 +41,7 @@ class RegexValidatorTests: XCTestCase {
     func testInvalidEmailValue() {
         viewModel.email = "someemailgmail.com"
 
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.5)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Should be email", tableName: nil))
     }

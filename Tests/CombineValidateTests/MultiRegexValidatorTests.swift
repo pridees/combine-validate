@@ -33,7 +33,7 @@ class MultiRegexValidatorTests: XCTestCase {
     func testFullyInvalidValue() {
         viewModel.specialText = ""
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.5)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
         
         XCTAssertEqual(
             viewModel.validationResult,
@@ -44,7 +44,7 @@ class MultiRegexValidatorTests: XCTestCase {
     func testValueWithOneNumber() {
         viewModel.specialText = "1"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.5)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Should be one special symbol at least", tableName: nil))
     }
@@ -52,7 +52,7 @@ class MultiRegexValidatorTests: XCTestCase {
     func testValueWithOneNumberAndSpecialSymbol() {
         viewModel.specialText = "1%"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.5)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
         
         XCTAssertEqual(
             viewModel.validationResult,
@@ -63,7 +63,7 @@ class MultiRegexValidatorTests: XCTestCase {
     func testValueWithOneNumberAndSpecialSymbolAndCapitalLetter() {
         viewModel.specialText = "1%A"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.5)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
         
         XCTAssertEqual(viewModel.validationResult, .success(.none))
     }
