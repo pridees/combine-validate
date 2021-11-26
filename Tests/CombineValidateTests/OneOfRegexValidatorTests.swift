@@ -46,7 +46,7 @@ final class OneOfRegexValidatorTests: XCTestCase {
     
     func testExpectedFacebookInput() {
         viewModel.socialProfileUrl = "facebook.com/userprofile"
-        
+
         _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.3)
         
         XCTAssertEqual(viewModel.validationResult, .success(.facebook))
