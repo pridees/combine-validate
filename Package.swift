@@ -15,10 +15,10 @@ let package = Package(
             name: "CombineValidateExtended",
             targets: ["CombineValidateExtended"]
         ),
-//        .library(
-//            name: "Examples",
-//            targets: ["Examples"]
-//        ),
+        .library(
+            name: "Examples",
+            targets: ["Examples"]
+        ),
     ],
     dependencies: [],
     targets: [
@@ -43,11 +43,11 @@ let package = Package(
         ),
         
 //        // MARK: - Examples target
-//        .target(
-//            name: "Examples",
-//            dependencies: [
-//                .byNameItem(name: "CombineValidate", condition: .none)
-//            ]
-//        ),
+        .target(
+            name: "Examples",
+            dependencies: [
+                .byNameItem(name: "CombineValidate", condition: .none)
+            ]
+        ),
     ]
 )

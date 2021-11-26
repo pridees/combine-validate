@@ -29,7 +29,7 @@ extension ValidationWrapper {
             self.successImage = successImage
             self.failureImage = failureImage
             
-            self.hintFont = hintFont ?? .callout
+            self.hintFont = hintFont ?? .caption
             
             self.iconTransition = iconTransition ?? .asymmetric(
                 insertion: .move(edge: .trailing),

@@ -39,7 +39,7 @@ final class OneOfRegexValidatorTests: XCTestCase {
     func testExpectedInstagramInput() {
         viewModel.socialProfileUrl = "instagram.com/userprofile"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.3)
         
         XCTAssertEqual(viewModel.validationResult, .success(.instagram))
     }
@@ -47,7 +47,7 @@ final class OneOfRegexValidatorTests: XCTestCase {
     func testExpectedFacebookInput() {
         viewModel.socialProfileUrl = "facebook.com/userprofile"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.3)
         
         XCTAssertEqual(viewModel.validationResult, .success(.facebook))
     }
@@ -55,7 +55,7 @@ final class OneOfRegexValidatorTests: XCTestCase {
     func testExpectedLinkedInInput() {
         viewModel.socialProfileUrl = "linkedin.com/in/userprofile"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.3)
         
         XCTAssertEqual(viewModel.validationResult, .success(.linkedIn))
     }
@@ -63,7 +63,7 @@ final class OneOfRegexValidatorTests: XCTestCase {
     func testUnexpectedValue() {
         viewModel.socialProfileUrl = "http://youtube.com/userprofile"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.3)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Type one of social profile link (insta, facebook, linkedIn)", tableName: nil))
     }
@@ -71,7 +71,7 @@ final class OneOfRegexValidatorTests: XCTestCase {
     func testEmptyValue() {
         viewModel.socialProfileUrl = ""
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.3)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Type one of social profile link (insta, facebook, linkedIn)", tableName: nil))
     }
