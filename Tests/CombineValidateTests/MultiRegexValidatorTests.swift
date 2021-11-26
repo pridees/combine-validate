@@ -14,26 +14,38 @@ class MultiRegexValidatorTests: XCTestCase {
                 errors: ["Should be one number at least", "Should be one special symbol at least", "Should be one capital letter at least"]
             )
         }()
-        
-        private var subscription = Set<AnyCancellable>()
-        
-        init() {
-            specialTextValidator
-                .assign(to: \.validationResult, on: self)
-                .store(in: &subscription)
-        }
     }
     
     let viewModel = ViewModel()
+    var cancellables: Set<AnyCancellable>!
+    
+    override func setUp() {
+        super.setUp()
+        cancellables = .init()
+    }
     
     func testIgnoreFirstValue() {
+        
+        viewModel.specialTextValidator
+            .sink(receiveValue: { _ in })
+            .store(in: &cancellables)
+        
         XCTAssertEqual(viewModel.validationResult, .untouched)
     }
     
     func testFullyInvalidValue() {
+        let expectation = XCTestExpectation(description: "Empty input expectation")
+        
+        viewModel.specialTextValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.specialText = ""
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(
             viewModel.validationResult,
@@ -42,17 +54,35 @@ class MultiRegexValidatorTests: XCTestCase {
     }
     
     func testValueWithOneNumber() {
+        let expectation = XCTestExpectation(description: "1 input expectation")
+        
+        viewModel.specialTextValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.specialText = "1"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Should be one special symbol at least", tableName: nil))
     }
     
     func testValueWithOneNumberAndSpecialSymbol() {
+        let expectation = XCTestExpectation(description: "1% input expectation")
+        
+        viewModel.specialTextValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.specialText = "1%"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(
             viewModel.validationResult,
@@ -61,9 +91,18 @@ class MultiRegexValidatorTests: XCTestCase {
     }
     
     func testValueWithOneNumberAndSpecialSymbolAndCapitalLetter() {
+        let expectation = XCTestExpectation(description: "1%A input expectation")
+        
+        viewModel.specialTextValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.specialText = "1%A"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(viewModel.validationResult, .success(.none))
     }

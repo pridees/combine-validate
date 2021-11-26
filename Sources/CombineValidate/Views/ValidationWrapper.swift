@@ -35,7 +35,7 @@ public struct ValidationWrapper<ValidatedView: View, ValidationPayload>: View {
             HStack {
                 content
                     .animation(nil)
-                    .padding(validated.isSuccess ? .vertical : .top, 4)
+                    .padding(validated.isSuccess || validated.isUntouched ? .vertical : .top, 4)
                 
                 Spacer()
                 icon
@@ -78,3 +78,37 @@ public struct ValidationWrapper<ValidatedView: View, ValidationPayload>: View {
         }
     }
 }
+
+struct ValidationWrapper_Previews: PreviewProvider {
+    class ViewModel: ObservableObject {
+        @Published var email = ""
+        
+        public lazy var emailValidator: ValidationPublisher = {
+            $email.validateWithRegex(
+                regex: RegularPattern.email,
+                error: "Not email",
+                tableName: nil
+            )
+        }()
+    }
+    
+    struct Content: View {
+        @StateObject private var viewModel = ViewModel()
+        
+        var body: some View {
+            NavigationView {
+                List {
+                    TextField("Email", text: $viewModel.email)
+                        .validate(for: viewModel.emailValidator)
+                }
+            }
+        }
+    }
+    
+    static var previews: some View {
+        Group {
+            Content()
+        }
+    }
+}
+

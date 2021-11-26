@@ -16,32 +16,54 @@ class RegexValidatorTests: XCTestCase {
         }()
             
         private var subscription = Set<AnyCancellable>()
-        
-        init() {
-            emailValidator
-                .assign(to: \.validationResult, on: self)
-                .store(in: &subscription)
-        }
     }
     
     let viewModel = ViewModel()
+    var cancellables: Set<AnyCancellable>!
+    
+    override func setUp() {
+        super.setUp()
+        cancellables = .init()
+    }
     
     func testIgnoreFirstValue() {
+        viewModel.emailValidator
+            .sink(receiveValue: { _ in })
+            .store(in: &cancellables)
+        
         XCTAssertEqual(viewModel.validationResult, .untouched)
     }
     
     func testValidEmailValue() {
+        let expectation = XCTestExpectation(description: "Valid email input expectation")
+        
+        viewModel.emailValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.email = "someemail@gmail.com"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
 
         XCTAssertEqual(viewModel.validationResult, .success(.none))
     }
     
     func testInvalidEmailValue() {
+        let expectation = XCTestExpectation(description: "Invalid email input expectation")
+        
+        viewModel.emailValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.email = "someemailgmail.com"
 
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Should be email", tableName: nil))
     }

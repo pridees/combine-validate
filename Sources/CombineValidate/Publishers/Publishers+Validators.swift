@@ -8,7 +8,7 @@ public func NotEmptyValidator(
 ) -> ValidationPublisher {
     publisher
         .dropFirst()
-        .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+        .debounce(for: .seconds(0.25), scheduler: RunLoop.main)
         .map(\.isEmpty)
         .map { !$0 ? .success(.none) : .failure(reason: message, tableName: tableName) }
         .eraseToAnyPublisher()
@@ -22,7 +22,7 @@ public func RegexValidator<Pattern>(
 ) -> ValidationPublisher where Pattern: RegexProtocol {
     publisher
         .dropFirst()
-        .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+        .debounce(for: .seconds(0.25), scheduler: RunLoop.main)
         .map { pattern.test($0) }
         .map { $0 ? .success(.none) : .failure(reason: message, tableName: tableName) }
         .eraseToAnyPublisher()
@@ -36,7 +36,7 @@ public func OneOfRegexValidator<Pattern>(
 ) -> RichValidationPublisher<Pattern> where Pattern: RegexProtocol {
     publisher
         .dropFirst()
-        .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+        .debounce(for: .seconds(0.25), scheduler: RunLoop.main)
         .map { value in
             for pattern in patterns {
                 if  pattern.test(value) {
@@ -56,7 +56,7 @@ public func MultiRegexValidator<Pattern>(
 ) -> ValidationPublisher where Pattern: RegexProtocol {
     publisher
         .dropFirst()
-        .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+        .debounce(for: .seconds(0.25), scheduler: RunLoop.main)
         .map { (value: String) -> [Validated<Void>] in
             var validationResults: [Validated<Void>] = .init(repeating: .untouched, count: patterns.count)
             

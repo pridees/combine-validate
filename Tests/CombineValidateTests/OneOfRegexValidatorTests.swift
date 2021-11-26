@@ -20,58 +20,105 @@ final class OneOfRegexValidatorTests: XCTestCase {
                 error: "Type one of social profile link (insta, facebook, linkedIn)"
             )
         }()
-        
-        private var subscription = Set<AnyCancellable>()
-        
-        init() {
-            socialProfileValidator
-                .assign(to: \.validationResult, on: self)
-                .store(in: &subscription)
-        }
     }
     
     let viewModel = ViewModel()
+    var cancellables: Set<AnyCancellable>!
+    
+    override func setUp() {
+        super.setUp()
+        cancellables = .init()
+    }
     
     func testIgnoreFirstValue() {
+        viewModel.socialProfileValidator
+            .sink(receiveValue: { _ in })
+            .store(in: &cancellables)
+        
         XCTAssertEqual(viewModel.validationResult, .untouched)
     }
     
     func testExpectedInstagramInput() {
+        let expectation = XCTestExpectation(description: "Instagram input expectation")
+        
+        viewModel.socialProfileValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.socialProfileUrl = "instagram.com/userprofile"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(viewModel.validationResult, .success(.instagram))
     }
     
     func testExpectedFacebookInput() {
-        viewModel.socialProfileUrl = "facebook.com/userprofile"
+        let expectation = XCTestExpectation(description: "Facebook input expectation")
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        viewModel.socialProfileValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
+        viewModel.socialProfileUrl = "facebook.com/userprofile"
+
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(viewModel.validationResult, .success(.facebook))
     }
     
     func testExpectedLinkedInInput() {
+        let expectation = XCTestExpectation(description: "Linkedin input expectation")
+        
+        viewModel.socialProfileValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.socialProfileUrl = "linkedin.com/in/userprofile"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(viewModel.validationResult, .success(.linkedIn))
     }
     
     func testUnexpectedValue() {
+        let expectation = XCTestExpectation(description: "Youtube input expectation")
+        
+        viewModel.socialProfileValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.socialProfileUrl = "http://youtube.com/userprofile"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Type one of social profile link (insta, facebook, linkedIn)", tableName: nil))
     }
     
     func testEmptyValue() {
+        let expectation = XCTestExpectation(description: "Invalid input expectation")
+        
+        viewModel.socialProfileValidator
+            .sink(receiveValue: { [weak self] result in
+                self?.viewModel.validationResult = result
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+        
         viewModel.socialProfileUrl = ""
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.75)
+        wait(for: [expectation], timeout: 1)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Type one of social profile link (insta, facebook, linkedIn)", tableName: nil))
     }
