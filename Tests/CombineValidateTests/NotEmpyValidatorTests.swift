@@ -29,7 +29,7 @@ final class NotEmptyValidatorTests: XCTestCase {
     func testInputEmptyValue() {
         viewModel.name = ""
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.3)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.4)
         
         XCTAssertEqual(viewModel.validationResult, .failure(reason: "Should not empty", tableName: nil))
     }
@@ -37,7 +37,7 @@ final class NotEmptyValidatorTests: XCTestCase {
     func testInputNonEmptyValue() {
         viewModel.name = "alex"
         
-        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.3)
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.4)
 
         XCTAssertEqual(viewModel.validationResult, .success(.none))
     }
