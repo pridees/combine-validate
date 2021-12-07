@@ -13,4 +13,4 @@ public typealias ValidationPublisher = AnyPublisher<Validated<Void>, Never>
 ///
 /// Use when you want to push through pipeline particular success case conforming ``RegexProtocol``
 /// Uses with ``OneOfRegexValidator(for:regexs:error:tableName:)``
-public typealias RichValidationPublisher<T> = AnyPublisher<Validated<T>, Never>
+public typealias ValidationPublisherOf<T> = AnyPublisher<Validated<T>, Never>

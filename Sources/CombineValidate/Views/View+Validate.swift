@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-extension TextField {
+extension View {
     public func validate(
         for publisher: ValidationPublisher,
         configuration: ValidationWrapper<Self, Void>.Configuration = .default
@@ -10,23 +10,14 @@ extension TextField {
     }
     
     public func validate<T: RegexProtocol>(
-        for publisher: RichValidationPublisher<T>,
+        for publisher: ValidationPublisherOf<T>,
         configuration: ValidationWrapper<Self, T>.Configuration = .default
     ) -> some View {
         ValidationWrapper(self, publisher, configuration: configuration)
     }
 }
 
-extension SecureField {
-    public func validate(
-        for publisher: ValidationPublisher,
-        configuration: ValidationWrapper<Self, Void>.Configuration = .default
-    ) -> some View {
-        ValidationWrapper(self, publisher, configuration: configuration)
-    }
-}
-
-extension Toggle {
+extension View {
     public func validate(
         for publisher: ValidationPublisher
     ) -> some View {

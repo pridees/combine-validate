@@ -1,12 +1,12 @@
 import Combine
 
 /// Useful extension for Published wrapped values
-extension Published.Publisher where Value == String {
+extension Publisher where Output == String, Failure == Never {
     public func validateNonEmpty(
         error message: String,
         tableName: String? = nil
     ) -> ValidationPublisher {
-        NotEmptyValidator(for: self, error: message, tableName: tableName)
+        NotEmptyValidator(for: AnyPublisher(self), error: message, tableName: tableName)
     }
     
     public func validateWithRegex<R: RegexProtocol>(
@@ -14,15 +14,15 @@ extension Published.Publisher where Value == String {
         error message: String,
         tableName: String? = nil
     ) -> ValidationPublisher {
-        RegexValidator(for: self, regex: pattern, error: message, tableName: tableName)
+        RegexValidator(for: AnyPublisher(self), regex: pattern, error: message, tableName: tableName)
     }
     
     public func validateOneOfRegex<R: RegexProtocol>(
         regexs patterns: [R],
         error message: String,
         tableName: String? = nil
-    ) -> RichValidationPublisher<R> {
-        OneOfRegexValidator(for: self, regexs: patterns, error: message, tableName: tableName)
+    ) -> ValidationPublisherOf<R> {
+        OneOfRegexValidator(for: AnyPublisher(self), regexs: patterns, error: message, tableName: tableName)
     }
     
     public func validateWithMultiRegex<R: RegexProtocol>(
@@ -30,7 +30,7 @@ extension Published.Publisher where Value == String {
         errors messages: [String],
         tableName: String? = nil
     ) -> ValidationPublisher {
-        MultiRegexValidator(for: self, regexs: patterns, errors: messages, tableName: tableName)
+        MultiRegexValidator(for: AnyPublisher(self), regexs: patterns, errors: messages, tableName: tableName)
     }
 }
 
@@ -39,7 +39,7 @@ extension Published.Publisher where Value == Bool {
         error message: String,
         tableName: String? = nil
     ) -> ValidationPublisher {
-        ToggleValidator(for: self, error: message, tableName: tableName)
+        ToggleValidator(for: AnyPublisher(self), error: message, tableName: tableName)
     }
 }
 

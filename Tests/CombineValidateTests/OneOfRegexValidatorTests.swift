@@ -14,7 +14,7 @@ final class OneOfRegexValidatorTests: XCTestCase {
         @Published var socialProfileUrl = ""
         @Published var validationResult: Validated<SocialLinkPattern> = .untouched
         
-        public lazy var socialProfileValidator: RichValidationPublisher<SocialLinkPattern> = {
+        public lazy var socialProfileValidator: ValidationPublisherOf<SocialLinkPattern> = {
             $socialProfileUrl.validateOneOfRegex(
                 regexs: [.facebook, .linkedIn, .instagram],
                 error: "Type one of social profile link (insta, facebook, linkedIn)"

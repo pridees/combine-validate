@@ -2,7 +2,7 @@ import Foundation
 import Combine
 
 public func NotEmptyValidator(
-    for publisher: Published<String>.Publisher,
+    for publisher: AnyPublisher<String, Never>,
     error message: String,
     tableName: String? = nil
 ) -> ValidationPublisher {
@@ -15,7 +15,7 @@ public func NotEmptyValidator(
 }
 
 public func RegexValidator<Pattern>(
-    for publisher: Published<String>.Publisher,
+    for publisher: AnyPublisher<String, Never>,
     regex pattern: Pattern,
     error message: String,
     tableName: String? = nil
@@ -29,11 +29,11 @@ public func RegexValidator<Pattern>(
 }
 
 public func OneOfRegexValidator<Pattern>(
-    for publisher: Published<String>.Publisher,
+    for publisher: AnyPublisher<String, Never>,
     regexs patterns: [Pattern],
     error message: String,
     tableName: String? = nil
-) -> RichValidationPublisher<Pattern> where Pattern: RegexProtocol {
+) -> ValidationPublisherOf<Pattern> where Pattern: RegexProtocol {
     publisher
         .dropFirst()
         .debounce(for: .seconds(0.25), scheduler: RunLoop.main)
@@ -49,7 +49,7 @@ public func OneOfRegexValidator<Pattern>(
 }
 
 public func MultiRegexValidator<Pattern>(
-    for publisher: Published<String>.Publisher,
+    for publisher: AnyPublisher<String, Never>,
     regexs patterns: [Pattern],
     errors messages: [String],
     tableName: String? = nil
@@ -77,7 +77,7 @@ public func MultiRegexValidator<Pattern>(
 }
 
 public func ToggleValidator(
-    for publisher: Published<Bool>.Publisher,
+    for publisher: AnyPublisher<Bool, Never>,
     error message: String,
     tableName: String? = nil
 ) -> ValidationPublisher {
