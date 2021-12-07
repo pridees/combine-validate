@@ -7,7 +7,7 @@ public struct ValidationWrapper<ValidatedView: View, ValidationPayload>: View {
     @State private var validated: Validated<ValidationPayload> = .untouched
     
     private let content: ValidatedView
-    private let publisher: RichValidationPublisher<ValidationPayload>
+    private let publisher: ValidationPublisherOf<ValidationPayload>
     private let configuration: Self.Configuration
     
     public init(
@@ -22,7 +22,7 @@ public struct ValidationWrapper<ValidatedView: View, ValidationPayload>: View {
     
     public init(
         _ content: ValidatedView,
-        _ publisher: RichValidationPublisher<ValidationPayload>,
+        _ publisher: ValidationPublisherOf<ValidationPayload>,
         configuration: Self.Configuration
     ) where ValidationPayload: RegexProtocol {
         self.content = content
@@ -80,15 +80,20 @@ public struct ValidationWrapper<ValidatedView: View, ValidationPayload>: View {
 }
 
 struct ValidationWrapper_Previews: PreviewProvider {
+    struct Person {
+        var email: String
+    }
+    
     class ViewModel: ObservableObject {
-        @Published var email = ""
+        @Published var person = Person(email: "")
         
         public lazy var emailValidator: ValidationPublisher = {
-            $email.validateWithRegex(
-                regex: RegularPattern.email,
-                error: "Not email",
-                tableName: nil
-            )
+            $person.map(\.email)
+                .validateWithRegex(
+                    regex: RegularPattern.email,
+                    error: "Not email",
+                    tableName: nil
+                )
         }()
     }
     
@@ -98,7 +103,7 @@ struct ValidationWrapper_Previews: PreviewProvider {
         var body: some View {
             NavigationView {
                 List {
-                    TextField("Email", text: $viewModel.email)
+                    TextField("Email", text: $viewModel.person.email)
                         .validate(for: viewModel.emailValidator)
                 }
             }
